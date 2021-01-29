@@ -5,33 +5,63 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Random;
+//import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+@SuppressWarnings("serial")
 public class TodoList extends JFrame implements ActionListener {
 
-	JButton addButton;
+	JButton addButton, clearButton;
 	JLabel resultLabel;
 	JPanel listHolder, addHolder;
 	JTextField siteField;
+	JList displayList;
+	JScrollPane scrollPane;
 	GridLayout gLayout;
-	ArrayList otpList;
+	
+	ArrayList<TodoListData> taskList = new ArrayList<TodoListData>(); // where we store the to-do list items
+	
 	TodoList() {
 		
-		otpList = new ArrayList();
+		/* initial data */
+        taskList.add(TodoListData("Long"));
+        taskList.add(TodoListData("Ship"));
+        taskList.add(TodoListData("To pay"));
+        taskList.add(TodoListData("Window"));
+        taskList.add(TodoListData("Friendly"));
+        taskList.add(TodoListData("To cook"));
+		
+		//taskList = new ArrayList();
 		listHolder = new JPanel();
 		addHolder = new JPanel();
 		gLayout = new GridLayout(0,1);
+		
+		/* Buttons */
 		addButton = new JButton("+");
+		clearButton = new JButton("clear all contents");
+		
+		/* Labels */
 		resultLabel = new JLabel("Your OTP Code");
+		
+		/* Text Fields */
 		siteField = new JTextField(15);
 		
+		/* Lists and display */
+		displayList = new JList<>(taskList.toArray(new String[0]));
+		scrollPane = new JScrollPane(displayList);
+		
+		
+		/* Action Listener */
 		addButton.addActionListener(this); // do some action on click
+		clearButton.addActionListener(this);
+		
 		addHolder.setLayout(new FlowLayout());
 		listHolder.setLayout(gLayout);
 		
@@ -40,6 +70,9 @@ public class TodoList extends JFrame implements ActionListener {
 		
 		addHolder.add(siteField);
 		addHolder.add(addButton);
+		addHolder.add(clearButton);
+		
+		listHolder.add(scrollPane);
 		
 		add(listHolder,BorderLayout.CENTER); 
 		add(addHolder, BorderLayout.SOUTH);
@@ -51,33 +84,35 @@ public class TodoList extends JFrame implements ActionListener {
 		setLocation(250,100); //controls the position of the window
 		setVisible(true); //shows the window
 		setSize(600,350); //controls the size of the window
+ 
+	}
 
-		 
-	}
 	
-	static char[] generate(int len) {
-		System.out.println("Generating OTP using random(): ");
-		String numbers = "0123456789";
-		Random rnd_choose = new Random();
-		char[] otp = new char[len];
-		//choose a random index in the numbers string and put it in otp char array
-		for (int i = 0; i < len; i++ ) {
-			otp[i] = numbers.charAt(rnd_choose.nextInt(numbers.length()));
-		}
-		return otp;
+	private TodoListData TodoListData(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
+
+
 	public void actionPerformed(ActionEvent e) {
-	//	int length = 6;
 	//	resultLabel.setText(String.valueOf(OTP.generate(length)));
-		if(e.getSource() == addButton) {
-			System.out.println(siteField.getText());
-			OTPData oData = new OTPData(siteField.getText(),
-										String.valueOf(TodoList.generate(6)));
-			otpList.add(oData);
-			//gLayout.add(new JLabel(oData.siteName));
-
-		}
+	switch(e.getActionCommand()) {
+			case ("+"):	
+				TodoListData taskData = new TodoListData(siteField.getText());
+				taskList.add(taskData);
+				
+				//System.out.println("add button selected");
+				break;
+			case ("clear all contents"):
+				taskList.clear();
+				break;
+			
+			default: 
+				System.out.println("invalid entry: " + e.getActionCommand());
+				break;
+		}	
+		
+		
 		 
 		
 	}
