@@ -13,7 +13,7 @@ public class Listing extends JFrame {
 
     Listing() {
 
-        final ArrayList<String> wordlist = new ArrayList<String>();
+        ArrayList<String> wordlist = new ArrayList<String>();
         wordlist.add("Head");
         wordlist.add("Green");
         wordlist.add("Water");

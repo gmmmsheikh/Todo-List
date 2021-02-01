@@ -4,9 +4,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-//import java.util.Random;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,42 +18,35 @@ import javax.swing.JTextField;
 public class TodoList extends JFrame implements ActionListener {
 
 	JButton addButton, clearButton;
-	JLabel resultLabel;
 	JPanel listHolder, addHolder;
 	JTextField siteField;
-	JList displayList;
+	JList<String> displayList;
 	JScrollPane scrollPane;
 	GridLayout gLayout;
+	JLabel header;
 	
-	ArrayList<TodoListData> taskList = new ArrayList<TodoListData>(); // where we store the to-do list items
+	DefaultListModel<String> listModel; //where we store tasks
 	
 	TodoList() {
-		
-		/* initial data */
-        taskList.add(TodoListData("Long"));
-        taskList.add(TodoListData("Ship"));
-        taskList.add(TodoListData("To pay"));
-        taskList.add(TodoListData("Window"));
-        taskList.add(TodoListData("Friendly"));
-        taskList.add(TodoListData("To cook"));
-		
-		//taskList = new ArrayList();
+
 		listHolder = new JPanel();
 		addHolder = new JPanel();
 		gLayout = new GridLayout(0,1);
 		
 		/* Buttons */
-		addButton = new JButton("+");
+		addButton = new JButton("add task");
 		clearButton = new JButton("clear all contents");
 		
-		/* Labels */
-		resultLabel = new JLabel("Your OTP Code");
+		
+		header= new JLabel("TASKS:");
 		
 		/* Text Fields */
 		siteField = new JTextField(15);
 		
 		/* Lists and display */
-		displayList = new JList<>(taskList.toArray(new String[0]));
+		listModel = new DefaultListModel<String>(); // using this instead of an array list to hold tasks strings
+		displayList = new JList<String>(listModel); // holds listModel contents for display
+		
 		scrollPane = new JScrollPane(displayList);
 		
 		
@@ -67,60 +59,45 @@ public class TodoList extends JFrame implements ActionListener {
 		
 		/* UX setup */
 		setLayout(new BorderLayout());// many layouts available. We picked border layout.
-		
 		addHolder.add(siteField);
 		addHolder.add(addButton);
 		addHolder.add(clearButton);
-		
 		listHolder.add(scrollPane);
+		
 		
 		add(listHolder,BorderLayout.CENTER); 
 		add(addHolder, BorderLayout.SOUTH);
 		
-		resultLabel.setHorizontalAlignment(JLabel.CENTER); // center justifies the label contents
+		header.setHorizontalAlignment(JLabel.CENTER); // center justifies the label contents
 		
-		//add(resultLabel, BorderLayout.CENTER); // organization of components within frame
+		add(header, BorderLayout.NORTH); // organization of components within frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allows close operation
 		setLocation(250,100); //controls the position of the window
 		setVisible(true); //shows the window
 		setSize(600,350); //controls the size of the window
- 
+		
+		addHolder.getRootPane().setDefaultButton(addButton);
 	}
-
-	
-	private TodoListData TodoListData(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	public void actionPerformed(ActionEvent e) {
-	//	resultLabel.setText(String.valueOf(OTP.generate(length)));
 	switch(e.getActionCommand()) {
-			case ("+"):	
-				TodoListData taskData = new TodoListData(siteField.getText());
-				taskList.add(taskData);
-				
-				//System.out.println("add button selected");
+			case ("add task"):	
+				listModel.addElement(siteField.getText());
+				siteField.setText("");
 				break;
+				
 			case ("clear all contents"):
-				taskList.clear();
+				listModel.clear();
 				break;
 			
 			default: 
 				System.out.println("invalid entry: " + e.getActionCommand());
 				break;
 		}	
-		
-		
-		 
-		
-	}
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		new TodoList();
-
 	}
 	
-
+	public static void main(String[] args) {
+		new TodoList();
+	}
+	
 }
